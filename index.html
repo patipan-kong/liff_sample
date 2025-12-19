@@ -75,17 +75,37 @@
         }
 
         async function sendMessages() {
+            const messages = [{
+                type: 'text',
+                text: 'Hello, this is a test message from LIFF app.'
+            }];
+
             try {
-                await liff.sendMessages([{
-                    type: 'text',
-                    text: 'Hello, this is a test message from LIFF app.'
-                }]);
-                alert("Message sent!");
+                if (liff.isInClient()) {
+                    // Running inside LINE App (Chat context)
+                    await liff.sendMessages(messages);
+                    alert("Message sent successfully (In-Client)!");
+                } else {
+                    // Running in External Browser (Chrome/Safari)
+                    // Must use Share Target Picker to choose who to send to
+                    if (liff.isApiAvailable('shareTargetPicker')) {
+                        const result = await liff.shareTargetPicker(messages);
+                        if (result) {
+                            alert("Message sent successfully (Share Target Picker)!");
+                        } else {
+                            console.log("Share Target Picker cancelled");
+                            // User closed the picker without sending
+                        }
+                    } else {
+                        alert("Share Target Picker is not available.\n\nPlease enable 'Share Target Picker' in LINE Developers Console -> LIFF -> Scopes/Features.");
+                    }
+                }
             } catch (err) {
                 console.error("LIFF send message failed", err);
                 const context = liff.getContext();
                 const contextType = context ? context.type : "Unknown";
-                alert(`Error: ${err.message}\n\nContext: ${contextType}\n\nPotentially stale permissions. Please click 'Log Out' to refresh your token.`);
+                const isClient = liff.isInClient();
+                alert(`Error: ${err.message}\n\nEnvironment: ${isClient ? 'In-Client' : 'External'}\nContext: ${contextType}\n\nTip: If 'In-Client', check 'chat_message.write' scope. If 'External', check 'Share Target Picker' availability.`);
             }
         }
 
