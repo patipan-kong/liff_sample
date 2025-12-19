@@ -50,7 +50,10 @@
             document.getElementById("content").innerHTML = `
                 <img src="${profile.pictureUrl}" width="100" style="border-radius:50%">
                 <p>สวัสดีคุณ <b>${profile.displayName}</b></p>
-                <button onclick="liff.closeWindow()">ปิดหน้าต่างนี้</button>
+                <button onclick="liff.sendMessages([{
+                    type: 'text',
+                    text: 'Hello, this is a test message from LIFF app.'
+                }])">ส่งข้อความไปยัง LINE</button>
             `;
         }
 
