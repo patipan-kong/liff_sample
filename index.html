@@ -31,7 +31,6 @@
 
     <script>
         async function main() {
-            // 2. เริ่มต้นใช้งานด้วย LIFF ID ของคุณ
             try {
                 await liff.init({ liffId: "2008732159-jmjoiZJc" });
 
@@ -45,15 +44,23 @@
             }
         }
 
+        async function sendMessages() {
+            try {
+                liff.sendMessages([{
+                    type: 'text',
+                    text: 'Hello, this is a test message from LIFF app.'
+                }])
+            } catch (err) {
+                console.error("LIFF send message failed", err);
+            }
+        }
+
         async function getUserProfile() {
             const profile = await liff.getProfile();
             document.getElementById("content").innerHTML = `
                 <img src="${profile.pictureUrl}" width="100" style="border-radius:50%">
                 <p>สวัสดีคุณ <b>${profile.displayName}</b></p>
-                <button onclick="liff.sendMessages([{
-                    type: 'text',
-                    text: 'Hello, this is a test message from LIFF app.'
-                }])">ส่งข้อความไปยัง LINE</button>
+                <button onclick="sendMessages()">ส่งข้อความไปยัง LINE</button>
             `;
         }
 
