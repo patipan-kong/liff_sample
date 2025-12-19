@@ -46,12 +46,14 @@
 
         async function sendMessages() {
             try {
-                liff.sendMessages([{
+                await liff.sendMessages([{
                     type: 'text',
                     text: 'Hello, this is a test message from LIFF app.'
-                }])
+                }]);
+                alert("Message sent!");
             } catch (err) {
                 console.error("LIFF send message failed", err);
+                alert("Error sending message: " + err.message + "\n\nPlease ensure 'chat_message.write' scope is enabled in LINE Developers Console.");
             }
         }
 
