@@ -62,8 +62,31 @@
             document.getElementById("content").innerHTML = `
                 <img src="${profile.pictureUrl}" width="100" style="border-radius:50%">
                 <p>สวัสดีคุณ <b>${profile.displayName}</b></p>
-                <button onclick="sendMessages()">ส่งข้อความไปยัง LINE</button>
+                <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+                    <button onclick="sendMessages()">ส่งข้อความไปยัง LINE</button>
+                    <button onclick="logout()" style="background:#cc0000;">Log Out (Refresh Config)</button>
+                </div>
             `;
+        }
+
+        function logout() {
+            liff.logout();
+            window.location.reload();
+        }
+
+        async function sendMessages() {
+            try {
+                await liff.sendMessages([{
+                    type: 'text',
+                    text: 'Hello, this is a test message from LIFF app.'
+                }]);
+                alert("Message sent!");
+            } catch (err) {
+                console.error("LIFF send message failed", err);
+                const context = liff.getContext();
+                const contextType = context ? context.type : "Unknown";
+                alert(`Error: ${err.message}\n\nContext: ${contextType}\n\nPotentially stale permissions. Please click 'Log Out' to refresh your token.`);
+            }
         }
 
         main();
