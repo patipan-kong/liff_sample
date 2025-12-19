@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My LIFF App</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00b900;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ยินดีต้อนรับสู่ LIFF App</h1>
+    <div id="content">
+        <p>กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <script>
+        async function main() {
+            // 2. เริ่มต้นใช้งานด้วย LIFF ID ของคุณ
+            try {
+                await liff.init({ liffId: "2008732159-jmjoiZJc" });
+
+                if (liff.isLoggedIn()) {
+                    getUserProfile();
+                } else {
+                    liff.login(); // ถ้าเปิดผ่าน Browser อื่นจะบังคับ Login
+                }
+            } catch (err) {
+                console.error("LIFF Initialization failed", err);
+            }
+        }
+
+        async function getUserProfile() {
+            const profile = await liff.getProfile();
+            document.getElementById("content").innerHTML = `
+                <img src="${profile.pictureUrl}" width="100" style="border-radius:50%">
+                <p>สวัสดีคุณ <b>${profile.displayName}</b></p>
+                <button onclick="liff.closeWindow()">ปิดหน้าต่างนี้</button>
+            `;
+        }
+
+        main();
+    </script>
+</body>
+
+</html>
